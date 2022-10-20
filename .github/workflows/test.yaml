@@ -12,8 +12,8 @@ jobs:
     - name: Checkout file date
       uses: moonrailgun/branch-filestorage-action@v1.2.0
       with:
-        path: date
+        path: cookie
     - name: Read and show
-      run: touch date && cat date
-    - name: update date
-      run: echo $(date) > date
+      run: touch cookie && cat cookie
+    - name: update cookie
+      run: python main.py
