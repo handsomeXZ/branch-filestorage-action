@@ -119,6 +119,11 @@ def RunScan(browser, path):
                   headers=headers)
     for i in range(60):
         time.sleep(5)
+        try:
+            bt = browser.find_element(By.CLASS_NAME,
+                                      '.module-confirm-desc')
+        except Exception as e:
+            print("未成功加载登入按钮")
 
         try:
             bt = browser.find_element(By.CLASS_NAME,
@@ -136,6 +141,7 @@ def RunScan(browser, path):
             file = open(path + "/cookie", 'w')
             file.write(str(browser.get_cookies()))
             file.close()
+            print(browser.get_cookies())
             return sessionId
             break
 
