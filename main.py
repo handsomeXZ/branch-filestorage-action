@@ -122,7 +122,7 @@ def RunScan(browser, path):
             sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
         except Exception as e:
             sessionId = ''
-
+        print("sessionId ", sessionId)
         if sessionId is not None and sessionId != '':
             file = open(path + "/cookie", 'w')
             file.write(str(browser.get_cookies()))
