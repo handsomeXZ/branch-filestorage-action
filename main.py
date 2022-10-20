@@ -64,7 +64,7 @@ def send(sessionid):
 
 def getCookies():
     rep = '' #requests.get(url="https://raw.githubusercontent.com/handsomeXZ/branch-filestorage-action/actions/filedb/cookie")
-    return rep.text
+    return  ''#rep.text
 
 def Entry(browser, path):
     sessionId = ''
