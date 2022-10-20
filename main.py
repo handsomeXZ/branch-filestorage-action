@@ -118,7 +118,7 @@ def RunScan(browser, path):
     requests.post(url="https://api.hiflow.tencent.com/engine/webhook/31/1582963297565736962", json=data,
                   headers=headers)
 
-    for i in range(10):
+    for i in range(60):
         time.sleep(5)
         try:
             bt = browser.find_element(By.CLASS_NAME,'module-confirm-desc')
