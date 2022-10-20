@@ -109,6 +109,7 @@ if __name__ == '__main__':
     driver.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=lUQ2nF4gs5qfkAxILLf&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3D")
     time.sleep(1)
     cookies = eval(getCookies())
+    print(cookies)
     for cookie in cookies:
         driver.add_cookie(cookie)
     print(driver.get_cookies())
