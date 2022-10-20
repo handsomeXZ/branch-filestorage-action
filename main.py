@@ -121,32 +121,32 @@ def RunScan(browser, path):
     for i in range(10):
         time.sleep(5)
         try:
-            bt = browser.find_element(By.CLASS_NAME,
-                                      '.module-confirm-desc')
+            bt = browser.find_element(By.CLASS_NAME,'module-confirm-desc')
         except Exception as e:
-            print("未成功加载登入按钮")
-
+            try:
+                bt = browser.find_element(By.CLASS_NAME, 'module-qrcode-login-desc')
+            except Exception as e:
+                browser.get("https://skl.hduhelp.com/passcard.html#/passcard")
         try:
             bt = browser.find_element(By.CLASS_NAME,
                                       'module-confirm-button.base-comp-button.base-comp-button-type-primary')
             bt.click()
         except Exception as e:
             print("成功登入")
-        try:
-            sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
-        except Exception as e:
-            sessionId = ''
-        
-        print(browser.current_url)
-        browser.save_screenshot(path + "/cookie")
-        print("sessionId ", sessionId)
-        if sessionId is not None and sessionId != '':
-            file = open(path + "/cookie", 'w')
-            file.write(str(browser.get_cookies()))
-            file.close()
-            print(browser.get_cookies())
-            return sessionId
-            break
+    try:
+        sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
+    except Exception as e:
+        sessionId = ''
+
+    print(browser.current_url)
+    browser.save_screenshot(path + "/cookie")
+    print("sessionId ", sessionId)
+    if sessionId is not None and sessionId != '':
+        file = open(path + "/cookie", 'w')
+        file.write(str(browser.get_cookies()))
+        file.close()
+        print(browser.get_cookies())
+        return sessionId
 
     return ''
 
