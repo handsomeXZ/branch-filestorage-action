@@ -23,7 +23,6 @@ jobs:
         pip install -r requirements.txt
         pip install pillow
         pip install pyzbar
-        pip install zbar
     - name: Install ChromeDriver
       run: |
         CHROME_VERSION=$(google-chrome --version | cut -f 3 -d ' ' | cut -d '.' -f 1) \
