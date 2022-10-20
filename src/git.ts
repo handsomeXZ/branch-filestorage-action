@@ -139,7 +139,7 @@ export async function save(options: ActionInterface): Promise<Status> {
   );
 
   await execute(
-    `git commit -m "update filestorage at ${new Date().toISOString()}" --quiet --no-verify --author="${gitAuthor}"`,
+    `git commit -m "update filestorage at ${new Date().toISOString()}test" --quiet --no-verify --author="${gitAuthor}"`,
     `${options.workspace}/${temporaryStorageDirectory}`
   );
 
