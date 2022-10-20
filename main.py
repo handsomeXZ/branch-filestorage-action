@@ -7,7 +7,7 @@ import json
 
 import requests
 from PIL import Image
-import pyzbar.pyzbar as pyzbar
+from pyzbar.pyzbar import decode
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
@@ -72,7 +72,7 @@ def Entry(browser, path):
     cookie_str = getCookies()
     if len(cookie_str)<14:
         return sessionId
-    cookies = eval()
+    cookies = eval(cookie_str)
     for cookie in cookies:
         browser.add_cookie(cookie)
     print(browser.get_cookies())
