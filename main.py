@@ -88,7 +88,10 @@ def Entry(browser, path):
         except Exception as e:
 
             break
-        sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
+        try:
+            sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
+        except Exception as e:
+            sessionId = ''
         if sessionId is not None and sessionId != '':
             break
 
@@ -115,7 +118,11 @@ def RunScan(browser, path):
                   headers=headers)
     for i in range(60):
         time.sleep(5)
-        sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
+        try:
+            sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
+        except Exception as e:
+            sessionId = ''
+
         if sessionId is not None and sessionId != '':
             file = open(path + "/cookie", 'w')
             file.write(str(browser.get_cookies()))
