@@ -1,5 +1,5 @@
 
-file = open("/usr/bin/bash/cookie", 'w')
+file = open("/home/runner/work/branch-filestorage-action/branch-filestorage-action/cookie", 'w')
 file.write("test")
 file.close()
 
