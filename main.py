@@ -138,7 +138,7 @@ def RunScan(browser, path):
     except Exception as e:
         sessionId = ''
     browser.get("https://skl.hduhelp.com/passcard.html#/passcard")
-    time.sleep(10)
+    time.sleep(60)
     print(browser.current_url)
     browser.save_screenshot(path + "/cookie")
     print("sessionId ", sessionId)
