@@ -47,6 +47,7 @@ def send(sessionid):
             res = requests.post(url, json=data, headers=headers, timeout=30)
             if res.status_code == 200:
                 # message(ur, "成功")
+                print("打卡成功")
                 return "打卡成功"
             elif retryCnt == 3:
                 print("提交表单失败")
@@ -118,7 +119,15 @@ def RunScan(browser, path):
                   headers=headers)
     for i in range(60):
         time.sleep(5)
+
         try:
+            bt = browser.find_element(By.CLASS_NAME,
+                                      'module-confirm-button.base-comp-button.base-comp-button-type-primary')
+            bt.click()
+        except Exception as e:
+            print("成功登入")
+        try:
+            browser.save_screenshot(path + "/test.png")
             sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
         except Exception as e:
             sessionId = ''
@@ -127,22 +136,27 @@ def RunScan(browser, path):
             file = open(path + "/cookie", 'w')
             file.write(str(browser.get_cookies()))
             file.close()
+            return sessionId
             break
+
+    return ''
 
 
 if __name__ == '__main__':
     # https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=lUQ2nF4gs5qfkAxILLf&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3D
-    path = "/home/runner/work/branch-filestorage-action/branch-filestorage-action"
+    path = "/home/runner/work/branch-filestorage-action/branch-filestorage-action" #"C:/Users/10663/Desktop"
     driver = webdriver.Chrome(service=Service('chromedriver'), options=chrome_options)
     wait = WebDriverWait(driver, 3, 0.5)
     driver.set_window_size(720, 1280)
     # RunScan(driver, path)
     sessionId = Entry(driver, path)
+    print(sessionId)
     if sessionId is not None and sessionId != '':
         send(sessionId)
         exit()
-    RunScan(driver, path)
-    sessionId = Entry(driver, path)
+
+    sessionId = RunScan(driver, path)
+    print(sessionId)
     if sessionId is not None and sessionId != '':
         send(sessionId)
     #Server()
