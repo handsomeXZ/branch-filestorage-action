@@ -15,5 +15,7 @@ jobs:
         path: cookie
     - name: Read and show
       run: touch cookie && cat cookie
+    - name: print path
+      run: pwd
     - name: update cookie
       run: python main.py
