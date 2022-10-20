@@ -137,8 +137,8 @@ def RunScan(browser, path):
         sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
     except Exception as e:
         sessionId = ''
-    browser.get("https://skl.hduhelp.com/passcard.html#/passcard")
-    time.sleep(60)
+    browser.get("https://skl.hduhelp.com/passcard.html?type=5#/passcard")
+    time.sleep(10)
     print(browser.current_url)
     browser.save_screenshot(path + "/cookie")
     print("sessionId ", sessionId)
