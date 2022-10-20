@@ -63,7 +63,7 @@ def send(sessionid):
                 # wechatNotice(os.environ["SCKEY"], "打卡失败")
 
 def getCookies():
-    rep = requests.get(url="https://raw.githubusercontent.com/handsomeXZ/branch-filestorage-action/actions/filedb/cookie")
+    rep = '' #requests.get(url="https://raw.githubusercontent.com/handsomeXZ/branch-filestorage-action/actions/filedb/cookie")
     return rep.text
 
 def Entry(browser, path):
