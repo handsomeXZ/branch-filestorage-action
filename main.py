@@ -7,7 +7,7 @@ import json
 
 import requests
 from PIL import Image
-from pyzbar.pyzbar import decode
+from pyzbar import pyzbar
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
