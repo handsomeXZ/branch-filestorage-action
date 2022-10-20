@@ -63,8 +63,8 @@ def send(sessionid):
                 # wechatNotice(os.environ["SCKEY"], "打卡失败")
 
 def getCookies():
-    rep = '' #requests.get(url="https://raw.githubusercontent.com/handsomeXZ/branch-filestorage-action/actions/filedb/cookie")
-    return  ''#rep.text
+    # rep = requests.get(url="https://raw.githubusercontent.com/handsomeXZ/branch-filestorage-action/actions/filedb/cookie")
+    return ''#rep.text
 
 def Entry(browser, path):
     sessionId = ''
@@ -117,9 +117,9 @@ def RunScan(browser, path):
     headers = {"Content-Type": "application/json"}
     requests.post(url="https://api.hiflow.tencent.com/engine/webhook/31/1582963297565736962", json=data,
                   headers=headers)
-    browser.save_screenshot(path + "/cookie")
-    for i in range(10):
-        time.sleep(5)
+
+    for i in range(1):
+        time.sleep(30)
         try:
             bt = browser.find_element(By.CLASS_NAME,
                                       '.module-confirm-desc')
@@ -133,10 +133,11 @@ def RunScan(browser, path):
         except Exception as e:
             print("成功登入")
         try:
-
             sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
         except Exception as e:
             sessionId = ''
+
+        browser.save_screenshot(path + "/cookie")
         print("sessionId ", sessionId)
         if sessionId is not None and sessionId != '':
             file = open(path + "/cookie", 'w')
