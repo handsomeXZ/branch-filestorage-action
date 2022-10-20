@@ -126,7 +126,7 @@ def RunScan(browser, path):
             try:
                 bt = browser.find_element(By.CLASS_NAME, 'module-qrcode-login-desc')
             except Exception as e:
-                browser.get("https://skl.hduhelp.com/passcard.html#/passcard")
+                break;
         try:
             bt = browser.find_element(By.CLASS_NAME,
                                       'module-confirm-button.base-comp-button.base-comp-button-type-primary')
@@ -137,7 +137,8 @@ def RunScan(browser, path):
         sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
     except Exception as e:
         sessionId = ''
-
+    browser.get("https://skl.hduhelp.com/passcard.html#/passcard")
+    time.sleep(10)
     print(browser.current_url)
     browser.save_screenshot(path + "/cookie")
     print("sessionId ", sessionId)
