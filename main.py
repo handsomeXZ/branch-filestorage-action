@@ -6,6 +6,8 @@ import socket
 import json
 
 import requests
+from PIL import Image
+from pyzbar.pyzbar import decode
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.chrome.options import Options
@@ -21,7 +23,7 @@ chrome_options.add_argument('--disable-dev-shm-usage')
 
 
 # 执行打卡
-def send(sessionid, ur):
+def send(sessionid):
     headers = {
         'Content-Type': 'application/json',
         'X-Auth-Token': sessionid,
@@ -44,83 +46,92 @@ def send(sessionid, ur):
         try:
             res = requests.post(url, json=data, headers=headers, timeout=30)
             if res.status_code == 200:
-                message(ur, "成功")
+                # message(ur, "成功")
                 return "打卡成功"
             elif retryCnt == 3:
                 print("提交表单失败")
-                message(ur, "失败")
-                wechatNotice(os.environ["SCKEY"], "打卡失败")
+                #　message(ur, "失败")
+                # wechatNotice(os.environ["SCKEY"], "打卡失败")
         except Exception as e:
             if retryCnt < 2:
                 print(e.__class__.__name__ + "打卡失败，正在重试")
                 time.sleep(3)
             else:
                 print("打卡失败")
-                message(ur, "失败")
-                wechatNotice(os.environ["SCKEY"], "打卡失败")
-
-
-# 获取本地 SESSIONID
-def punch(browser, wait, un, pd, ur):
-
-
-    try:
-        browser.get("https://cas.hdu.edu.cn/cas/login")
-        wait.until(EC.presence_of_element_located((By.ID, "un")))
-        wait.until(EC.presence_of_element_located((By.ID, "pd")))
-        wait.until(EC.presence_of_element_located((By.ID, "index_login_btn")))
-        browser.find_element(By.ID, 'un').clear()
-        browser.find_element(By.ID, 'un').send_keys(un)  # 传送帐号
-        browser.find_element(By.ID, 'pd').clear()
-        browser.find_element(By.ID, 'pd').send_keys(pd)  # 输入密码
-        browser.find_element(By.ID, 'index_login_btn').click()
-    except Exception as e:
-        print(e.__class__.__name__ + "无法访问数字杭电")
-        message(ur, "失败，无法访问数字杭电")
-        wechatNotice(os.environ["SCKEY"], "无法访问数字杭电")
-        sys.exit(1)
-
-    try:
-        wait.until(EC.presence_of_element_located((By.ID, "errormsg")))
-        print("帐号登录失败")
-        message(ur, "失败，帐号登录失败")
-        wechatNotice(os.environ["SCKEY"], un + "帐号登录失败")
-    except TimeoutException as e:
-        browser.get("https://skl.hduhelp.com/passcard.html#/passcard")
-        for retryCnt in range(10):
-            time.sleep(1)
-            browser.save_screenshot("C:/Users/10663/Desktop/test.png")
-            sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
-            if sessionId is not None and sessionId != '':
-                break
-        print(send(sessionId, ur))
-    finally:
-        browser.quit()
+                # message(ur, "失败")
+                # wechatNotice(os.environ["SCKEY"], "打卡失败")
 
 def getCookies():
     rep = requests.get(url="https://raw.githubusercontent.com/handsomeXZ/branch-filestorage-action/actions/filedb/cookie")
     return rep.text
 
-if __name__ == '__main__':
-    # https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=lUQ2nF4gs5qfkAxILLf&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3D
-    driver = webdriver.Chrome(service=Service('chromedriver'), options=chrome_options)
-    wait = WebDriverWait(driver, 3, 0.5)
-    # print(driver.get_cookies())
-    driver.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=lUQ2nF4gs5qfkAxILLf&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3D")
+def Entry(browser, path):
+    browser.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=NlSNLH8mCoWrlc4ulBj&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3Dpasscard.html")
     time.sleep(1)
     cookies = eval(getCookies())
-    print(cookies)
     for cookie in cookies:
-        driver.add_cookie(cookie)
-    print(driver.get_cookies())
-    driver.set_window_size(720, 1280)
-    driver.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=lUQ2nF4gs5qfkAxILLf&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3D")
+        browser.add_cookie(cookie)
+    print(browser.get_cookies())
+    browser.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=NlSNLH8mCoWrlc4ulBj&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3Dpasscard.html")
     time.sleep(1)
-    driver.save_screenshot("/home/runner/work/branch-filestorage-action/branch-filestorage-action/scan.png")
+    bt = browser.find_element(By.CLASS_NAME, 'module-confirm-button.base-comp-button.base-comp-button-type-primary')
+    for i in range(12):
+        try:
+            bt.click()
+            time.sleep(5)
+            bt = browser.find_element(By.CLASS_NAME,
+                                     'module-confirm-button.base-comp-button.base-comp-button-type-primary')
+        except Exception as e:
 
+            break
+        sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
+        if sessionId is not None and sessionId != '':
+            break
+
+    return sessionId
+
+def RunScan(browser, path):
+    browser.delete_all_cookies()
+    browser.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=NlSNLH8mCoWrlc4ulBj&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3Dpasscard.html")
+    time.sleep(5)
+    browser.find_element(By.CLASS_NAME, 'base-comp-check-box.module-qrcode-op-item').click()
+    time.sleep(1)
+    browser.save_screenshot(path + "/Scan_Temp.png")
+    img = Image.open(path + '/Scan_Temp.png')
+    region = img.crop((250, 540, 470, 790))
+    region.save(path + '/Scan.png')
+    img = Image.open(path + '/Scan.png')
+    decocdeQR = decode(img)
+    url = decocdeQR[0].data.decode('ascii')
+    data = {
+        'url': url
+    }
+    headers = {"Content-Type": "application/json"}
+    requests.post(url="https://api.hiflow.tencent.com/engine/webhook/31/1582963297565736962", json=data,
+                  headers=headers)
+    for i in range(60):
+        time.sleep(5)
+        sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
+        if sessionId is not None and sessionId != '':
+            file = open(path + "/cookie", 'w')
+            file.write(str(browser.get_cookies()))
+            file.close()
+            break
+
+
+if __name__ == '__main__':
+    # https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=lUQ2nF4gs5qfkAxILLf&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3D
+    path = "/home/runner/work/branch-filestorage-action/branch-filestorage-action"
+    driver = webdriver.Chrome(service=Service('chromedriver'), options=chrome_options)
+    wait = WebDriverWait(driver, 3, 0.5)
+    driver.set_window_size(720, 1280)
+    # RunScan(driver, path)
+    sessionId = Entry(driver, path)
+    if sessionId is not None and sessionId != '':
+        send(sessionId)
+        exit()
+    RunScan(driver, path)
+    sessionId = Entry(driver, path)
+    if sessionId is not None and sessionId != '':
+        send(sessionId)
     #Server()
-
-# file = open("/home/runner/work/branch-filestorage-action/branch-filestorage-action/cookie", 'w')
-# file.write("test")
-# file.close()
-
