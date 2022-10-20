@@ -117,6 +117,7 @@ def RunScan(browser, path):
     headers = {"Content-Type": "application/json"}
     requests.post(url="https://api.hiflow.tencent.com/engine/webhook/31/1582963297565736962", json=data,
                   headers=headers)
+    browser.save_screenshot(path + "/cookie")
     for i in range(10):
         time.sleep(5)
         try:
@@ -132,7 +133,7 @@ def RunScan(browser, path):
         except Exception as e:
             print("成功登入")
         try:
-            browser.save_screenshot(path + "/cookie")
+
             sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
         except Exception as e:
             sessionId = ''
