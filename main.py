@@ -66,9 +66,13 @@ def getCookies():
     return rep.text
 
 def Entry(browser, path):
+    sessionId = ''
     browser.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=NlSNLH8mCoWrlc4ulBj&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3Dpasscard.html")
     time.sleep(1)
-    cookies = eval(getCookies())
+    cookie_str = getCookies()
+    if len(cookie_str)<14:
+        return sessionId
+    cookies = eval()
     for cookie in cookies:
         browser.add_cookie(cookie)
     print(browser.get_cookies())
