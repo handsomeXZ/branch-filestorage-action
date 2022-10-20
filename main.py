@@ -118,8 +118,8 @@ def RunScan(browser, path):
     requests.post(url="https://api.hiflow.tencent.com/engine/webhook/31/1582963297565736962", json=data,
                   headers=headers)
 
-    for i in range(1):
-        time.sleep(30)
+    for i in range(10):
+        time.sleep(5)
         try:
             bt = browser.find_element(By.CLASS_NAME,
                                       '.module-confirm-desc')
@@ -136,7 +136,8 @@ def RunScan(browser, path):
             sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
         except Exception as e:
             sessionId = ''
-
+        
+        print(browser.current_url)
         browser.save_screenshot(path + "/cookie")
         print("sessionId ", sessionId)
         if sessionId is not None and sessionId != '':
