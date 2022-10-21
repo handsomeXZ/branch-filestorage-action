@@ -102,7 +102,7 @@ def RunScan(browser, wait, path):
     browser.delete_all_cookies()
     browser.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=NlSNLH8mCoWrlc4ulBj&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3Dpasscard.html")
     wait.until(EC.presence_of_element_located(
-        (By.CLASS_NAME, "module-confirm-button.base-comp-button.base-comp-button-type-primary")))
+        (By.CLASS_NAME, "base-comp-check-box.module-qrcode-op-item")))
     browser.find_element(By.CLASS_NAME, 'base-comp-check-box.module-qrcode-op-item').click()
     browser.save_screenshot(path + "/Scan_Temp.png")
     img = Image.open(path + '/Scan_Temp.png')
