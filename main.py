@@ -152,7 +152,7 @@ def RunScan(browser, wait, path):
 
 if __name__ == '__main__':
     # https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=lUQ2nF4gs5qfkAxILLf&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3D
-    path = "C:/Users/10663/Desktop"#"/home/runner/work/branch-filestorage-action/branch-filestorage-action" #"C:/Users/10663/Desktop"
+    path = "/home/runner/work/branch-filestorage-action/branch-filestorage-action" #"C:/Users/10663/Desktop"
     driver = webdriver.Chrome(service=Service('chromedriver'), options=chrome_options)
     wait = WebDriverWait(driver, 3, 0.5)
     driver.set_window_size(720, 1280)
