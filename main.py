@@ -99,6 +99,8 @@ def Entry(browser, path):
     return sessionId
 
 def RunScan(browser, wait, path):
+    sessionId = ''
+    
     browser.delete_all_cookies()
     browser.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=NlSNLH8mCoWrlc4ulBj&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3Dpasscard.html")
     wait.until(EC.presence_of_element_located(
@@ -132,6 +134,7 @@ def RunScan(browser, wait, path):
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, "page-passcard")))
     except Exception as e:
         print("未成功切换")
+
     if sessionId is None or sessionId == '':
         try:
             sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
