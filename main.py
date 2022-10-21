@@ -125,12 +125,13 @@ def RunScan(browser, wait, path):
     for i in range(2):
         try:
             wait.until(EC.presence_of_element_located((By.ID, "wait")))
-        except Exception as e:
+        except TimeoutException as e:
             try:
+                print("开始尝试登入")
                 browser.find_element(By.CLASS_NAME,
                                      "module-confirm-button.base-comp-button.base-comp-button-type-primary").click()
             except Exception as e:
-                print("未找到登入按钮")
+                print("未找到登入")
 
     browser.get("https://skl.hduhelp.com/passcard.html?type=5#/passcard")
     try:
@@ -138,11 +139,12 @@ def RunScan(browser, wait, path):
     except Exception as e:
         print("未成功切换")
 
-    if sessionId is None or sessionId == '':
-        try:
-            sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
-        except Exception as e:
-            sessionId = ''
+    for retryCnt in range(10):
+        time.sleep(1)
+        sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
+        if sessionId is not None and sessionId != '':
+            break
+
     print(browser.current_url)
     browser.save_screenshot(path + "/cookie")
     print("sessionId ", sessionId)
