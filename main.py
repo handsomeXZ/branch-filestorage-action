@@ -141,7 +141,7 @@ def RunScan(browser, path):
     browser.get("https://www.baidu.com")
     time.sleep(10)
     browser.get("https://skl.hduhelp.com/passcard.html?type=5#/passcard")
-    time.sleep(30)
+    time.sleep(120)
     if sessionId is None or sessionId == '':
         try:
             sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
