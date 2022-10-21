@@ -68,11 +68,12 @@ def getCookies():
 
 def Entry(browser, path):
     sessionId = ''
-    browser.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=NlSNLH8mCoWrlc4ulBj&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3Dpasscard.html")
-    time.sleep(1)
     cookie_str = getCookies()
     if len(cookie_str)<14:
         return sessionId
+    browser.get(
+        "https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=NlSNLH8mCoWrlc4ulBj&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3Dpasscard.html")
+    time.sleep(1)
     cookies = eval(cookie_str)
     for cookie in cookies:
         browser.add_cookie(cookie)
@@ -123,16 +124,17 @@ def RunScan(browser, wait, path):
 
     for i in range(2):
         try:
-            wait.until(EC.presence_of_element_located(
-                (By.CLASS_NAME, "module-confirm-button.base-comp-button.base-comp-button-type-primary")))
-            browser.find_element(By.CLASS_NAME,
-                                 "module-confirm-button.base-comp-button.base-comp-button-type-primary").click()
+            wait.until(EC.presence_of_element_located((By.ID, "wait")))
         except Exception as e:
-            print("未找到登入按钮")
+            try:
+                browser.find_element(By.CLASS_NAME,
+                                     "module-confirm-button.base-comp-button.base-comp-button-type-primary").click()
+            except Exception as e:
+                print("未找到登入按钮")
 
     browser.get("https://skl.hduhelp.com/passcard.html?type=5#/passcard")
     try:
-        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "page-passcard")))
+        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "van-badge__wrapper.van-icon.van-icon-hesuan")))
     except Exception as e:
         print("未成功切换")
 
