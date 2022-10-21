@@ -98,12 +98,12 @@ def Entry(browser, path):
 
     return sessionId
 
-def RunScan(browser, path):
+def RunScan(browser, wait, path):
     browser.delete_all_cookies()
     browser.get("https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=NlSNLH8mCoWrlc4ulBj&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3Dpasscard.html")
-    time.sleep(5)
+    wait.until(EC.presence_of_element_located(
+        (By.CLASS_NAME, "module-confirm-button.base-comp-button.base-comp-button-type-primary")))
     browser.find_element(By.CLASS_NAME, 'base-comp-check-box.module-qrcode-op-item').click()
-    time.sleep(1)
     browser.save_screenshot(path + "/Scan_Temp.png")
     img = Image.open(path + '/Scan_Temp.png')
     region = img.crop((250, 540, 470, 790))
@@ -111,37 +111,27 @@ def RunScan(browser, path):
     img = Image.open(path + '/Scan.png')
     decocdeQR = decode(img)
     url = decocdeQR[0].data.decode('ascii')
-    data = {
-        'url': url
-    }
+    data = {'url': url}
     headers = {"Content-Type": "application/json"}
     requests.post(url="https://api.hiflow.tencent.com/engine/webhook/31/1582963297565736962", json=data,
                   headers=headers)
 
-    for i in range(60):
-        time.sleep(5)
+
+
+    for i in range(2):
         try:
-            bt = browser.find_element(By.CLASS_NAME,'module-confirm-desc')
+            wait.until(EC.presence_of_element_located(
+                (By.CLASS_NAME, "module-confirm-button.base-comp-button.base-comp-button-type-primary")))
+            browser.find_element(By.CLASS_NAME,
+                                 "module-confirm-button.base-comp-button.base-comp-button-type-primary").click()
         except Exception as e:
-            try:
-                bt = browser.find_element(By.CLASS_NAME, 'module-qrcode-login-desc')
-            except Exception as e:
-                break;
-        try:
-            bt = browser.find_element(By.CLASS_NAME,
-                                      'module-confirm-button.base-comp-button.base-comp-button-type-primary')
-            bt.click()
-        except Exception as e:
-            print("成功登入")
-    try:
-        sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
-    except Exception as e:
-        sessionId = ''
-    time.sleep(20)
-    browser.get("https://www.baidu.com")
-    time.sleep(10)
+            print("未找到登入按钮")
+
     browser.get("https://skl.hduhelp.com/passcard.html?type=5#/passcard")
-    time.sleep(120)
+    try:
+        wait.until(EC.presence_of_element_located((By.CLASS_NAME, "page-passcard")))
+    except Exception as e:
+        print("未成功切换")
     if sessionId is None or sessionId == '':
         try:
             sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
@@ -151,9 +141,9 @@ def RunScan(browser, path):
     browser.save_screenshot(path + "/cookie")
     print("sessionId ", sessionId)
     if sessionId is not None and sessionId != '':
-        file = open(path + "/cookie", 'w')
-        file.write(str(browser.get_cookies()))
-        file.close()
+        # file = open(path + "/cookie", 'w')
+        # file.write(str(browser.get_cookies()))
+        # file.close()
         print(browser.get_cookies())
         return sessionId
 
@@ -162,7 +152,7 @@ def RunScan(browser, path):
 
 if __name__ == '__main__':
     # https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=lUQ2nF4gs5qfkAxILLf&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3D
-    path = "/home/runner/work/branch-filestorage-action/branch-filestorage-action" #"C:/Users/10663/Desktop"
+    path = "C:/Users/10663/Desktop"#"/home/runner/work/branch-filestorage-action/branch-filestorage-action" #"C:/Users/10663/Desktop"
     driver = webdriver.Chrome(service=Service('chromedriver'), options=chrome_options)
     wait = WebDriverWait(driver, 3, 0.5)
     driver.set_window_size(720, 1280)
@@ -173,7 +163,7 @@ if __name__ == '__main__':
         send(sessionId)
         exit()
 
-    sessionId = RunScan(driver, path)
+    sessionId = RunScan(driver, wait, path)
     print(sessionId)
     if sessionId is not None and sessionId != '':
         send(sessionId)
