@@ -137,7 +137,8 @@ def RunScan(browser, path):
         sessionId = browser.execute_script("return window.localStorage.getItem('sessionId')")
     except Exception as e:
         sessionId = ''
-    browser.get("https://skl.hduhelp.com/passcard.html?type=5#/passcard")
+    browser.get("https://www.baidu.com")
+    #browser.get("https://skl.hduhelp.com/passcard.html?type=5#/passcard")
     time.sleep(60)
     if sessionId is None or sessionId == '':
         try:
