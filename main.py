@@ -122,7 +122,7 @@ def RunScan(browser, wait, path):
 
 
 
-    for i in range(2):
+    for i in range(100):
         try:
             wait.until(EC.presence_of_element_located((By.ID, "wait")))
         except TimeoutException as e:
@@ -149,9 +149,12 @@ def RunScan(browser, wait, path):
     browser.save_screenshot(path + "/cookie")
     print("sessionId ", sessionId)
     if sessionId is not None and sessionId != '':
-        # file = open(path + "/cookie", 'w')
-        # file.write(str(browser.get_cookies()))
-        # file.close()
+        browser.get(
+            "https://login.dingtalk.com/oauth2/challenge.htm?client_id=dinghd3ewha7rzdjn3my&response_type=code&scope=openid&prompt=consent&state=NlSNLH8mCoWrlc4ulBj&redirect_uri=https%3A%2F%2Fskl.hdu.edu.cn%2Fapi%2Flogin%2Fdingtalk%2Fauth%3Findex%3Dpasscard.html")
+        time.sleep(5)
+        file = open(path + "/cookie", 'w')
+        file.write(str(browser.get_cookies()))
+        file.close()
         print(browser.get_cookies())
         return sessionId
 
